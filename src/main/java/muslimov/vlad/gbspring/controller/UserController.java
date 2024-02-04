@@ -1,12 +1,11 @@
 package muslimov.vlad.gbspring.controller;
 
 import lombok.RequiredArgsConstructor;
+import muslimov.vlad.gbspring.model.UserCreateDto;
 import muslimov.vlad.gbspring.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,9 +19,22 @@ public class UserController {
         model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
+
     @GetMapping("/{id}")
     public String getUser(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         return "userProfile";
+    }
+
+    @PostMapping("/registration")
+    public String createUser(@ModelAttribute UserCreateDto userCreateDto, Model model) {
+        model.addAttribute("user", userCreateDto);
+        return "redirect:/users/" + userService.createUser(userCreateDto).getId();
+    }
+
+    @GetMapping("/registration")
+    public String registration(Model model, UserCreateDto userCreateDto) {
+        model.addAttribute("user",userCreateDto);
+        return "registration";
     }
 }
