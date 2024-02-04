@@ -1,42 +1,54 @@
 package muslimov.vlad.gbspring.service;
 
+import lombok.RequiredArgsConstructor;
+import muslimov.vlad.gbspring.dto.TaskCreateDto;
 import muslimov.vlad.gbspring.dto.TaskDto;
+import muslimov.vlad.gbspring.mapper.TaskMapper;
 import muslimov.vlad.gbspring.model.Task;
+import muslimov.vlad.gbspring.model.TaskStatus;
+import muslimov.vlad.gbspring.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
-    private final Map<Long, Task> repository;
-    private Long countId;
+    TaskRepository taskRepository;
+    TaskMapper taskMapper;
 
-    public TaskService() {
-        this.repository = new HashMap<>();
-        this.countId = 1L;
+    public List<TaskDto> getTasks() {
+        return taskRepository
+                .findAll()
+                .stream()
+                .map(taskMapper::toDto)
+                .toList();
     }
 
-    public List<Task> getTasks() {
-        return repository.values().stream().toList();
+    public List<TaskDto> getTasksByStatus(TaskStatus taskStatus) {
+        return taskRepository
+                .findTaskByStatus(taskStatus)
+                .stream()
+                .map(taskMapper::toDto)
+                .toList();
     }
 
-    public Task createTask(TaskDto task) {
-        Task newTask = Task
-                .builder()
-                .id(countId++)
-                .name(task.name())
-                .description(task.description())
-                .createAt(LocalDateTime.now())
-                .build();
-
-        return repository.put(newTask.id(), newTask);
+    public TaskDto getTask(Long id) {
+        return taskMapper.toDto(taskRepository.findByIdOrThrow(id));
     }
 
-    public Task getTask(Long id) {
-        return repository.get(id);
+    public TaskDto createTask(TaskCreateDto task) {
+        return taskMapper.toDto(taskRepository.save(taskMapper.toEntity(task)));
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
+
+    public TaskDto editTaskStatus(Long id, TaskStatus taskStatus) {
+        Task task = taskRepository.findByIdOrThrow(id);
+        task.setStatus(taskStatus);
+        return taskMapper.toDto(task);
     }
 }
