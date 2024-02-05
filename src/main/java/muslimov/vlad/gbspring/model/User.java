@@ -1,11 +1,7 @@
 package muslimov.vlad.gbspring.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -15,10 +11,10 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = Task.TASK_TABLE_NAME)
-public class Task {
+public class User {
 
-    public static final String TASK_TABLE_NAME = "task";
-    private static final String SEQ_NAME = "task_seq";
+    public static final String USER_TABLE_NAME = "users";
+    private static final String SEQ_NAME = "user_seq";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
@@ -28,11 +24,4 @@ public class Task {
     )
     private Long id;
     private String name;
-    private String description;
-    @CreationTimestamp
-    private LocalDateTime createAt;
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status;
-    @ManyToOne
-    private User user;
 }

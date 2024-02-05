@@ -1,8 +1,8 @@
 package muslimov.vlad.gbspring.mapper;
 
-import muslimov.vlad.gbspring.dto.TaskCreateDto;
-import muslimov.vlad.gbspring.dto.TaskDto;
-import muslimov.vlad.gbspring.model.Task;
+import muslimov.vlad.gbspring.dto.UserCreateDto;
+import muslimov.vlad.gbspring.dto.UserDto;
+import muslimov.vlad.gbspring.model.User;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -12,8 +12,10 @@ import org.mapstruct.ReportingPolicy;
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface TaskMapper {
-    Task toEntity(TaskCreateDto taskCreateDto);
+public interface UserMapper {
+    User toEntity(UserCreateDto userCreateDto);
 
-    TaskDto toDto(Task task);
+    User toEntity(UserDto userDto);
+
+    UserDto toDto(User user);
 }
