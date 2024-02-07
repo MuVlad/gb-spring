@@ -23,8 +23,8 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
     @SequenceGenerator(
-            name = SEQ_NAME, sequenceName = SEQ_NAME,
-            initialValue = 100, allocationSize = 1
+        name = SEQ_NAME, sequenceName = SEQ_NAME,
+        initialValue = 100, allocationSize = 1
     )
     private Long id;
     private String name;
@@ -33,4 +33,6 @@ public class Task {
     private LocalDateTime createAt;
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
+    @ManyToOne
+    private User user;
 }

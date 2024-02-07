@@ -1,31 +1,35 @@
 package muslimov.vlad.gbspring.service;
 
 import lombok.RequiredArgsConstructor;
-import muslimov.vlad.gbspring.model.User;
-import muslimov.vlad.gbspring.model.UserCreateDto;
+import muslimov.vlad.gbspring.dto.UserCreateDto;
+import muslimov.vlad.gbspring.dto.UserDto;
+import muslimov.vlad.gbspring.mapper.UserMapper;
 import muslimov.vlad.gbspring.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    UserRepository userRepository;
+    UserMapper userMapper;
 
-    public List<User> getAllUsers() {
-        userRepository.createUser(new UserCreateDto("Vanya", "vanya@mail.com"));
-        userRepository.createUser(new UserCreateDto("Zoi", "zoi@mail.com"));
-        userRepository.createUser(new UserCreateDto("Joni", "joni@mail.com"));
-        return userRepository.getAllUsers();
+    public List<UserDto> getUsers() {
+        return userRepository
+            .findAll()
+            .stream()
+            .map(userMapper::toDto)
+            .toList();
     }
 
-    public User getUserById(Long id) {
-        return userRepository.getUser(id);
+    public UserDto getUserById(Long id) {
+        return userMapper.toDto(userRepository.findByIdOrThrow(id));
     }
 
-    public User createUser(UserCreateDto userCreateDto) {
-        return userRepository.createUser(userCreateDto);
+    public UserDto createUser(UserCreateDto userCreateDto) {
+        final var saveUser = userRepository.save(userMapper.toEntity(userCreateDto));
+        return userMapper.toDto(saveUser);
     }
 }

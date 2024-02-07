@@ -1,5 +1,6 @@
 package muslimov.vlad.gbspring.repository;
 
+import muslimov.vlad.gbspring.exception.model.NotFoundException;
 import muslimov.vlad.gbspring.model.Task;
 import muslimov.vlad.gbspring.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     default Task findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(
-                () -> new RuntimeException("Задача с ID:" + id + " не найден!")
+            () -> new NotFoundException("Задача с ID:" + id + " не найден!")
         );
     }
 
