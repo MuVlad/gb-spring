@@ -2,12 +2,14 @@ package muslimov.vlad.gbspring.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import muslimov.vlad.gbspring.dto.UserCreateDto;
 import muslimov.vlad.gbspring.dto.UserDto;
 import muslimov.vlad.gbspring.service.UserService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,11 +30,5 @@ public class UserController {
     @Operation(summary = "Получение пользователя по id")
     public HttpEntity<UserDto> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @PostMapping
-    @Operation(summary = "Создание нового пользователя")
-    public HttpEntity<UserDto> createUser(@RequestBody UserCreateDto userCreateDto) {
-        return ResponseEntity.ok(userService.createUser(userCreateDto));
     }
 }
