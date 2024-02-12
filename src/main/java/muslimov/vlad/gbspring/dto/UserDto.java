@@ -1,4 +1,4 @@
 package muslimov.vlad.gbspring.dto;
 
-public record UserDto(Long id, String name) {
+public record UserDto(Long id, String name, String password) {
 }
