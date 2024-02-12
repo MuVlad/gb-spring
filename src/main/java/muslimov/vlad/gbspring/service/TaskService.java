@@ -1,6 +1,7 @@
 package muslimov.vlad.gbspring.service;
 
 import lombok.RequiredArgsConstructor;
+import muslimov.vlad.gbspring.aop.TrackUserAction;
 import muslimov.vlad.gbspring.dto.TaskCreateDto;
 import muslimov.vlad.gbspring.dto.TaskDto;
 import muslimov.vlad.gbspring.mapper.TaskMapper;
@@ -20,7 +21,7 @@ public class TaskService {
     TaskMapper taskMapper;
     UserService userService;
     UserMapper userMapper;
-
+    @TrackUserAction
     public List<TaskDto> getTasks() {
         return taskRepository
             .findAll()
@@ -28,7 +29,7 @@ public class TaskService {
             .map(taskMapper::toDto)
             .toList();
     }
-
+    @TrackUserAction
     public List<TaskDto> getTasksByStatus(TaskStatus taskStatus) {
         return taskRepository
             .findTaskByStatus(taskStatus)
@@ -36,7 +37,7 @@ public class TaskService {
             .map(taskMapper::toDto)
             .toList();
     }
-
+    @TrackUserAction
     public TaskDto getTask(Long id) {
         return taskMapper.toDto(taskRepository.findByIdOrThrow(id));
     }
