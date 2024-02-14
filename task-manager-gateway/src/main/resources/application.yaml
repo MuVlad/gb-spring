@@ -1,0 +1,36 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: task-tracker-gateway
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+      routes:
+        - id: user-service
+          uri: http://user-service
+          predicates:
+            - Path=/user-service/**
+        - id: task-service
+          uri: http://task-service
+          predicates:
+            - Path=/task-service/**
+      discovery:
+        locator:
+          lower-case-service-id: true
+          enabled: true
+eureka:
+  instance:
+    appname: ${spring.application.name}
+    instanceId: ${eureka.instance.appname}:${spring.application.instance-id:${random.value}}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
