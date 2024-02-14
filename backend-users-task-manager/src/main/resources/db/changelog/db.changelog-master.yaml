@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: /dev/db.changelog-dev-1.sql
+      relativeToChangelogFile: true
