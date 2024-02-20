@@ -1,4 +1,4 @@
 package muslimov.vlad.gbspring.dto;
 
-public record JwtRequestDto(String username, String password) {
+public record JwtRequestDto(String name, String password) {
 }

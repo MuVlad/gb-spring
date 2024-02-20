@@ -3,17 +3,15 @@ package muslimov.vlad.gbspring.service;
 import lombok.RequiredArgsConstructor;
 import muslimov.vlad.gbspring.dto.UserCreateDto;
 import muslimov.vlad.gbspring.dto.UserDto;
-import muslimov.vlad.gbspring.exception.model.NotFoundException;
 import muslimov.vlad.gbspring.mapper.UserMapper;
+import muslimov.vlad.gbspring.model.Role;
 import muslimov.vlad.gbspring.model.User;
-import muslimov.vlad.gbspring.repository.RoleRepository;
 import muslimov.vlad.gbspring.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +23,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
     public List<UserDto> getUsers() {
@@ -46,9 +43,7 @@ public class UserService implements UserDetailsService {
 
     public UserDto createUser(UserCreateDto userCreateDto) {
         final var user = userMapper.toEntity(userCreateDto);
-        user.setRoles(List.of(roleRepository.findByName("ROLE_USER").orElseThrow(
-            () -> new NotFoundException(("Роль USER не найдена"))
-        )));
+        user.setRole(Role.USER);
         final var saveUser = userRepository.save(user);
         return userMapper.toDto(saveUser);
     }
@@ -58,12 +53,13 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByName(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found with name: " + username));
 
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(
             user.getName(),
             user.getPassword(),
-            user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName())).toList());
+            roles
+        );
     }
 }

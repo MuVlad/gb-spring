@@ -3,8 +3,6 @@ package muslimov.vlad.gbspring.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
-
 @Setter
 @Getter
 @Builder
@@ -22,16 +20,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
     @SequenceGenerator(
         name = SEQ_NAME, sequenceName = SEQ_NAME,
+        initialValue = 3,
         allocationSize = 1
     )
     private Long id;
     private String name;
     private String password;
-    @ManyToMany
-    @JoinTable(
-        name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Collection<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

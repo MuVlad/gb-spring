@@ -27,7 +27,6 @@ public class AuthController {
         description = "При успешной аутентификации пользователь получает токен"
     )
     public HttpEntity<JwtResponseDto> createAuthToken(@RequestBody JwtRequestDto jwtRequestDto) {
-        System.out.println();
         return ResponseEntity.ok(authService.createAuthToken(jwtRequestDto));
     }
 

@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,12 +23,12 @@ public class AuthService {
 
     public JwtResponseDto createAuthToken(JwtRequestDto jwtRequestDto) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequestDto.username(), jwtRequestDto.password()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequestDto.name(), jwtRequestDto.password()));
         } catch (BadCredentialsException e) {
             throw new BadRequestException("Неверный логин или пароль");
         }
 
-        UserDetails userDetails = userService.loadUserByUsername(jwtRequestDto.username());
+        UserDetails userDetails = userService.loadUserByUsername(jwtRequestDto.name());
         String token = jwtTokenUtils.generateToken(userDetails);
         return new JwtResponseDto(token);
     }
