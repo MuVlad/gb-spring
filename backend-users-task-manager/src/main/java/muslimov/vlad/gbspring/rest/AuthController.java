@@ -26,13 +26,13 @@ public class AuthController {
         summary = "Аутентификация пользователя",
         description = "При успешной аутентификации пользователь получает токен"
     )
-    public HttpEntity<JwtResponseDto> createAuthToken(@RequestBody JwtRequestDto jwtRequestDto) {
-        return ResponseEntity.ok(authService.createAuthToken(jwtRequestDto));
+    public HttpEntity<JwtResponseDto> login(@RequestBody JwtRequestDto jwtRequestDto) {
+        return ResponseEntity.ok(authService.login(jwtRequestDto));
     }
 
     @PostMapping("/registration")
     @Operation(summary = "Создание нового пользоваьеля")
-    public HttpEntity<UserDto> createNewUser(@RequestBody UserCreateDto userCreateDto) {
+    public HttpEntity<UserDto> createUser(@RequestBody UserCreateDto userCreateDto) {
         return ResponseEntity.ok(authService.createUser(userCreateDto));
     }
 }
