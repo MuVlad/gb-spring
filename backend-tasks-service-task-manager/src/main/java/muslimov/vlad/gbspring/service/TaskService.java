@@ -5,10 +5,11 @@ import muslimov.vlad.gbspring.aop.TrackUserAction;
 import muslimov.vlad.gbspring.dto.TaskCreateDto;
 import muslimov.vlad.gbspring.dto.TaskDto;
 import muslimov.vlad.gbspring.mapper.TaskMapper;
-import muslimov.vlad.gbspring.mapper.UserMapper;
 import muslimov.vlad.gbspring.model.Task;
 import muslimov.vlad.gbspring.model.TaskStatus;
+import muslimov.vlad.gbspring.model.TaskUpdatedEvent;
 import muslimov.vlad.gbspring.repository.TaskRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
 
-    TaskRepository taskRepository;
-    TaskMapper taskMapper;
-    UserService userService;
-    UserMapper userMapper;
+    private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
+    private final ApplicationEventPublisher publisher;
     @TrackUserAction
     public List<TaskDto> getTasks() {
         return taskRepository
@@ -53,6 +55,7 @@ public class TaskService {
     public TaskDto editTaskStatus(Long id, TaskStatus taskStatus) {
         Task task = taskRepository.findByIdOrThrow(id);
         task.setStatus(taskStatus);
+        publisher.publishEvent(new TaskUpdatedEvent(this,task));
         return taskMapper.toDto(task);
     }
 

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = Task.TASK_TABLE_NAME)
-public class Task {
+public class Task implements ITask {
 
     public static final String TASK_TABLE_NAME = "task";
     private static final String SEQ_NAME = "task_seq";
@@ -35,4 +35,48 @@ public class Task {
     private TaskStatus status;
     @ManyToOne
     private User user;
+
+    // Паттерн Builder
+    public static class TaskBuilder {
+        private Long id;
+        private String name;
+        private String description;
+        private LocalDateTime createAt;
+        private TaskStatus status;
+        private User user;
+
+        public TaskBuilder id(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public TaskBuilder name(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public TaskBuilder description(final String description) {
+            this.description = description;
+            return this;
+        }
+
+        public TaskBuilder createAt(final LocalDateTime createAt) {
+            this.createAt = createAt;
+            return this;
+        }
+
+        public TaskBuilder status(final TaskStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public TaskBuilder user(final User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Task build() {
+            return new Task(this.id, this.name, this.description, this.createAt, this.status, this.user);
+        }
+    }
 }
